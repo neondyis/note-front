@@ -1,7 +1,7 @@
 import {
     Box,
     Button,
-    Center, Divider,
+    Center, Divider,Text,
     Flex, Input, Modal, ModalBody, ModalCloseButton,
     ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, StackDivider,
     useDisclosure, VStack
@@ -18,7 +18,7 @@ export const NotePage = () => {
     const [fontColourValue, setFontColourValue] = useState("");
     const [notes, setNotes] = useState([]);
     const client = axios.create({
-        baseURL: process.env.REACT_APP_BASE_URI,
+        baseURL: "process.env.REACT_APP_BASE_URI_PROD",
         headers: {
             "Content-Type": "application/json",
         }
@@ -62,7 +62,9 @@ export const NotePage = () => {
     return (
         <Box>
             <Flex flexDirection={'row'} justifyContent={'flex-end'}>
-                <Button variant='ghost' border='solid thin white' size={'lg'} onClick={onOpen}>Add Note</Button>
+                <Button color={"white"} variant='ghost' border='solid thin white' size={'lg'} onClick={onOpen}>
+                    <Text>Add Note</Text>
+                </Button>
                 <Modal isOpen={isOpen} onClose={resetModal}>
                     <ModalOverlay />
                     <ModalContent>
@@ -79,7 +81,6 @@ export const NotePage = () => {
                             <Divider />
                             <HexColorPicker color={fontColourValue} onChange={setFontColourValue} />
                         </ModalBody>
-
                         <ModalFooter>
                             <Button variant='ghost' mr={3} onClick={onClose}>
                                 Close
