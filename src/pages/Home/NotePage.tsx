@@ -18,7 +18,7 @@ export const NotePage = () => {
     const [fontColourValue, setFontColourValue] = useState("");
     const [notes, setNotes] = useState([]);
     const client = axios.create({
-        baseURL: "process.env.REACT_APP_BASE_URI_PROD",
+        baseURL: "process.env.REACT_APP_BASE_URI",
         headers: {
             "Content-Type": "application/json",
         }
