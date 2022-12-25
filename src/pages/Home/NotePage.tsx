@@ -1,13 +1,9 @@
 import {
     Box,
     Button,
-    Card,
-    CardBody,
-    Center,
-    Container, Divider,
+    Center, Divider,
     Flex, Input, Modal, ModalBody, ModalCloseButton,
     ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, StackDivider,
-    Text,
     useDisclosure, VStack
 } from "@chakra-ui/react";
 import {SetStateAction, useEffect, useState} from "react";
@@ -22,7 +18,7 @@ export const NotePage = () => {
     const [fontColourValue, setFontColourValue] = useState("");
     const [notes, setNotes] = useState([]);
     const client = axios.create({
-        baseURL: "http://localhost:8080/notes",
+        baseURL: process.env.REACT_APP_BASE_URI,
         headers: {
             "Content-Type": "application/json",
         }
