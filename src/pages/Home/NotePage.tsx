@@ -53,13 +53,17 @@ export const NotePage = () => {
         })
     };
 
-
+    const resetModal = () => {
+        setColourValue("");
+        setFontColourValue("");
+        onClose();
+    }
 
     return (
         <Box>
             <Flex flexDirection={'row'} justifyContent={'flex-end'}>
                 <Button variant='ghost' border='solid thin white' size={'lg'} onClick={onOpen}>Add Note</Button>
-                <Modal isOpen={isOpen} onClose={onClose}>
+                <Modal isOpen={isOpen} onClose={resetModal}>
                     <ModalOverlay />
                     <ModalContent>
                         <ModalHeader>Create a note Lyubov Moya ❤️</ModalHeader>

@@ -13,7 +13,7 @@ export const Note = ({content,colour,fontColour,created}:NoteProp) => {
                     </Flex>
                 </CardBody>
                 <CardFooter>
-                    {time}
+                    <Text color={fontColour} fontSize='sm'>{time}</Text>
                 </CardFooter>
             </Card>
     )
