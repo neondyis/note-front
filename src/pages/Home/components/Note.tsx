@@ -15,7 +15,7 @@ export const Note = ({content,colour,fontColour,created}:NoteProp) => {
     };
 
     return(
-            <Card bg={colour} minH={'250px'} minW={'250px'}>
+            <Card bg={colour} minH={'250px'} minW={'250px'} maxW={'250px'}>
                 <CardBody>
                     <Flex justifyContent={"flex-end"}>
                         <IconButton variant='outline' colorScheme={'whiteAlpha'} size={"xs"} aria-label='Edit Note' icon={<EditIcon />}  onClick={editNote}/>
