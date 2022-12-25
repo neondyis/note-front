@@ -88,7 +88,7 @@ export const NotePage = () => {
             <br/>
             <Center>
                 <VStack  divider={<StackDivider borderColor='gray.200' />}>
-                    {
+                    {notes.length > 0 ?
                         notes.map(({id,content,colour, fontColour,created}) => {
                             return (
                                 <Box key={id}>
@@ -97,6 +97,8 @@ export const NotePage = () => {
                                 </Box>
                             )
                         })
+                        :
+                        <div> Loading</div>
                     }
                 </VStack>
             </Center>
