@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import * as React from 'react'
+
+// 1. import `ChakraProvider` component
+import {ChakraProvider, extendTheme} from '@chakra-ui/react'
 import './App.css';
+import { NotePage } from './pages/Home/NotePage';
+
+
+
+const theme = extendTheme({
+    styles: {
+        global: () => ({
+            body: {
+                bg: "#D9AFD9",
+                backgroundImage: "linear-gradient(85deg, #D9AFD9 0%, #97D9E1 100%)",
+            },
+}),
+    },
+    colors: {},
+    fonts: {},
+    fontSizes: {},
+    breakpoints: {
+        sm: "320px",
+        md: "768px",
+        lg: "960px",
+        xl: "1200px",
+    },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ChakraProvider theme={theme}>
+        <NotePage />
+      </ChakraProvider>
   );
 }
 
