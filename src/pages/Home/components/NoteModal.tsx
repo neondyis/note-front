@@ -12,21 +12,50 @@ import {
 import {HexColorPicker} from "react-colorful";
 import {SetStateAction, useState} from "react";
 import {CanvasNote} from "./CanvasNote";
+import {ADD_NOTE} from "../redux/noteReducer";
+import axios from "axios";
+import {useAppDispatch} from "../../hooks";
 
 export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,content,colour,fontColour}:NoteModalProps) => {
     const [contentValue, setContentValue] = useState(content ? content:"");
     const [colourValue, setColourValue] = useState(colour ? colour:"");
     const [fontColourValue, setFontColourValue] = useState(fontColour? fontColour:"");
+    const [noteType, setNoteType] = useState("Normal")
 
     const handleContentChange = (event: { target: { value: SetStateAction<string> }}) => setContentValue(event.target.value)
     const handleColourChange = (event: { target: { value: SetStateAction<string> }}) => setColourValue(event.target.value)
     const handleFontColourChange = (event: { target: { value: SetStateAction<string> }}) => setFontColourValue(event.target.value)
 
     const resetModal = () => {
-        setContentValue("");
-        setColourValue("");
-        setFontColourValue("");
         onClose();
+    }
+
+    const client = axios.create({
+        baseURL: process.env.REACT_APP_BASE_URI,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const dispatch = useAppDispatch();
+
+
+    const createNote = (content:string,colour:string,fontColour:string) => {
+        client.post('/insert',{
+                content: content,
+                colour: colour,
+                fontColour: fontColour,
+                type: noteType
+            }
+        ).then((res) => {
+            const note = res.data;
+            dispatch(ADD_NOTE(note))
+            onClose();
+        })
+    };
+
+    const handleTabChange = (index:number) => {
+        index === 0 ? setNoteType("Normal"): setNoteType("Canvas");
     }
 
     return (
@@ -36,7 +65,7 @@ export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,
                 <ModalHeader>{modalHeader}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Tabs isFitted variant='enclosed'>
+                    <Tabs isFitted variant='enclosed' onChange={handleTabChange}>
                         <TabList>
                             <Tab>
                                Normal Note
@@ -58,7 +87,7 @@ export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,
                                 <HexColorPicker color={fontColourValue} onChange={setFontColourValue} />
                             </TabPanel>
                             <TabPanel>
-                                <CanvasNote/>
+                                <CanvasNote onStrokeChange={setContentValue} onBackgroundChange={setColourValue} content={contentValue} background={colourValue}/>
                             </TabPanel>
                         </TabPanels>
                     </Tabs>
@@ -69,7 +98,11 @@ export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,
                         Close
                     </Button>
                     <Button variant='ghost' onClick={() => {
-                        buttonFunction(contentValue,colourValue,fontColourValue)
+                        if(buttonFunction !== undefined){
+                            buttonFunction(contentValue,colourValue,fontColourValue)
+                        }else{
+                            createNote(contentValue,colourValue,fontColourValue)
+                        }
                         resetModal();
                     }}>{buttonText}</Button>
                 </ModalFooter>
@@ -83,7 +116,7 @@ type NoteModalProps = {
     onOpen: () => void;
     onClose: () => void;
     buttonText: string;
-    buttonFunction: any;
+    buttonFunction?: any;
     modalHeader: string,
     content?: string;
     colour?: string;

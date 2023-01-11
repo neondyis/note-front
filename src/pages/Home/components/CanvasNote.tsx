@@ -1,18 +1,19 @@
-import { Stage, Layer, Line, Text } from 'react-konva';
-import { useRef, useState} from "react";
+import { Stage, Layer, Line } from 'react-konva';
+import React, {SetStateAction, useRef, useState} from "react";
 import Konva from "konva";
-import {Button} from "@chakra-ui/react";
+import {Button, Center} from "@chakra-ui/react";
 import {HexColorPicker} from "react-colorful";
 
-export const CanvasNote = () => {
+export const CanvasNote = ({onBackgroundChange,onStrokeChange,content,background}:CanvasNoteProps) => {
     const [tool, setTool] = useState('pen');
-    const [lines, setLines] = useState([]);
+    const [lines, setLines] = useState(content ? JSON.parse(content):[]);
     const stageRef = useRef(null);
 
     // TODO ADD UNDO AND REDO FUNCTIONALITY
     const [history, setHistory] = useState([]);
     const [historyStep, setHistoryStep] = useState(0);
     const [strokeValue, setStrokeValue] = useState("#df4b26");
+    const [backgroundValue, setBackgroundValue] = useState(background ? background :"#ffffff");
     const isDrawing = useRef(false);
 
     const handleMouseDown = (e:Konva.KonvaEventObject<MouseEvent>) => {
@@ -41,49 +42,55 @@ export const CanvasNote = () => {
     };
 
     const handleMouseUp = () => {
+        onStrokeChange(JSON.stringify(lines));
         isDrawing.current = false;
     };
 
-    const saveToJson = () => {
-        // @ts-ignore
-        console.log(JSON.stringify(lines))
+    const handleBackgroundChange = (color:string) => {
+        onBackgroundChange(color);
+        setBackgroundValue(color);
     }
 
     // @ts-ignore
     return(
         <div>
             <HexColorPicker color={strokeValue} onChange={setStrokeValue} />
-            <Stage
-                width={368}
-                height={500}
-                onMouseDown={handleMouseDown}
-                onMousemove={handleMouseMove}
-                onMouseup={handleMouseUp}
-                onTouchstart={handleMouseDown}
-                onTouchmove={handleMouseMove}
-                onTouchend={handleMouseUp}
-                ref={stageRef}
-            >
-                <Layer>
-                    {lines.map((line, i) => (
-                        <Line
-                            key={i}
-                            // @ts-ignore
-                            points={line.points}
-                            // @ts-ignore
-                            stroke={line.strokeValue}
-                            strokeWidth={5}
-                            tension={0.5}
-                            lineCap="round"
-                            lineJoin="round"
-                            globalCompositeOperation={
+            <HexColorPicker color={backgroundValue} onChange={handleBackgroundChange} />
+            <Center>
+                <Stage
+                    width={200}
+                    height={250}
+                    style={{backgroundColor:backgroundValue, border:"thin black solid"}}
+                    onMouseDown={handleMouseDown}
+                    onMousemove={handleMouseMove}
+                    onMouseup={handleMouseUp}
+                    onTouchstart={handleMouseDown}
+                    onTouchmove={handleMouseMove}
+                    onTouchend={handleMouseUp}
+                    ref={stageRef}
+                >
+                    <Layer>
+                        {/*// @ts-ignore*/}
+                        {lines.map((line, i) => (
+                            <Line
+                                key={i}
                                 // @ts-ignore
-                                line.tool === 'eraser' ? 'destination-out' : 'source-over'
-                            }
-                        />
-                    ))}
-                </Layer>
-            </Stage>
+                                points={line.points}
+                                // @ts-ignore
+                                stroke={line.strokeValue}
+                                strokeWidth={5}
+                                tension={0.5}
+                                lineCap="round"
+                                lineJoin="round"
+                                globalCompositeOperation={
+                                    // @ts-ignore
+                                    line.tool === 'eraser' ? 'destination-out' : 'source-over'
+                                }
+                            />
+                        ))}
+                    </Layer>
+                </Stage>
+            </Center>
             <select
                 value={tool}
                 onChange={(e) => {
@@ -93,7 +100,13 @@ export const CanvasNote = () => {
                 <option value="pen">Pen</option>
                 <option value="eraser">Eraser</option>
             </select>
-            <Button onClick={saveToJson}>Save to Json</Button>
         </div>
     )
+}
+
+type CanvasNoteProps = {
+    onStrokeChange: React.Dispatch<SetStateAction<string>>;
+    onBackgroundChange: React.Dispatch<SetStateAction<string>>;
+    content: string;
+    background:string;
 }

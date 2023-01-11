@@ -9,7 +9,7 @@ import {useEffect} from "react";
 import {Note} from "./components/Note";
 import axios from "axios";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {ADD_NOTE, UPDATE_NOTES} from "./redux/noteReducer";
+import {UPDATE_NOTES} from "./redux/noteReducer";
 import {NoteModal} from "./components/NoteModal";
 
 export const NotePage = () => {
@@ -36,19 +36,7 @@ export const NotePage = () => {
             console.log("Error Loading Notes.")
         });
     },[])
-    
-    const createNote = (content:string,colour:string,fontColour:string) => {
-        client.post('/insert',{
-                content: content,
-                colour: colour,
-                fontColour: fontColour
-        }
-        ).then((res) => {
-            const note = res.data;
-            dispatch(ADD_NOTE(note))
-            onClose();
-        })
-    };
+
 
     return (
         <Box>
@@ -56,18 +44,18 @@ export const NotePage = () => {
                 <Button color={"white"} variant='ghost' border='solid thin white' size={'lg'} onClick={onOpen}>
                     <Text>Add Note</Text>
                 </Button>
-                <NoteModal onClose={onClose} isOpen={isOpen} buttonText={'Create Note'} buttonFunction={createNote}
+                <NoteModal onClose={onClose} isOpen={isOpen} buttonText={'Create Note'}
                            modalHeader={'Create a note Lyubov Moya ❤️'}  onOpen={onOpen}/>
             </Flex>
             <br/>
             <Center>
                 <VStack  divider={<StackDivider borderColor='gray.200' />}>
                     {notes.length > 0 ?
-                        notes?.map(({id,content,colour, fontColour,created}) => {
+                        notes?.map(({id,content,colour, fontColour,created,type}) => {
                             return (
                                 <Box key={id}>
                                     <Spacer />
-                                    <Note id={id} content={content} colour={colour} created={created} fontColour={fontColour}/>
+                                    <Note id={id} content={content} colour={colour} created={created} fontColour={fontColour} type={type}/>
                                 </Box>
                             )
                         })

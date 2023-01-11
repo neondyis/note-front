@@ -17,9 +17,12 @@ import axios from "axios";
 import {useAppDispatch} from "../../hooks";
 import {DELETE_NOTE, EDIT_NOTE} from "../redux/noteReducer";
 import {NoteModal} from "./NoteModal";
+import {Layer, Line, Stage} from "react-konva";
+import React, {useEffect, useState} from "react";
 
-export const Note = ({id,content,colour,fontColour,created}:NoteProp) => {
+export const Note = ({id,content,colour,fontColour,created,type}:NoteProp) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
+    const [lines, setLines] = useState([]);
     fontColour = fontColour? fontColour : "#000000"
     const time = DateTime.fromISO(created).toLocaleString(DateTime.DATETIME_MED);
     const dispatch = useAppDispatch();
@@ -43,6 +46,15 @@ export const Note = ({id,content,colour,fontColour,created}:NoteProp) => {
         })
     };
 
+    useEffect(() => {
+        if (type === "Canvas"){
+            setLines(JSON.parse(content))
+        }
+    },[])
+
+    console.log(type,colour)
+
+
     return(
             <Card bg={colour} minH={'250px'} minW={'250px'} maxW={'250px'}>
                <NoteModal onClose={onClose} isOpen={isOpen} buttonText={'Modify Note'} buttonFunction={editNote}
@@ -54,7 +66,32 @@ export const Note = ({id,content,colour,fontColour,created}:NoteProp) => {
                         <IconButton variant='outline' colorScheme={'whiteAlpha'} size={"xs"} aria-label='Delete Note' icon={<DeleteIcon />} onClick={() => deleteNote(id)} />
                     </Flex>
                     <Flex alignItems={'center'} >
-                        <Text color={fontColour} fontSize='md' overflowWrap={'anywhere'}>{content}</Text>
+                        {type === "Normal" || type === null?
+                            <Text color={fontColour} fontSize='md' overflowWrap={'anywhere'}>{content}</Text>
+                            :
+                            <Stage
+                                width={200}
+                                height={250}
+                                style={{backgroundColor:colour}}
+                            >
+                                    <Layer>
+                                        {/*// @ts-ignore*/}
+                                        {lines.map((line, i) => (
+                                            <Line
+                                                key={i}
+                                                // @ts-ignore
+                                                points={line.points}
+                                                // @ts-ignore
+                                                stroke={line.strokeValue}
+                                                strokeWidth={5}
+                                                tension={0.5}
+                                                lineCap="round"
+                                                lineJoin="round"
+                                            />
+                                        ))}
+                                    </Layer>
+                            </Stage>
+                            }
                     </Flex>
                 </CardBody>
                 <CardFooter>
@@ -70,4 +107,5 @@ type NoteProp = {
     colour: string;
     fontColour: string;
     created: string;
+    type:string;
 }
