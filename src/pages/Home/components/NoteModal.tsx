@@ -7,10 +7,11 @@ import {
     ModalCloseButton,
     ModalContent, ModalFooter,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs
 } from "@chakra-ui/react";
 import {HexColorPicker} from "react-colorful";
 import {SetStateAction, useState} from "react";
+import {CanvasNote} from "./CanvasNote";
 
 export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,content,colour,fontColour}:NoteModalProps) => {
     const [contentValue, setContentValue] = useState(content ? content:"");
@@ -35,15 +36,33 @@ export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,
                 <ModalHeader>{modalHeader}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Input isRequired={true} onChange={handleContentChange} value={contentValue} size={'lg'} placeholder='Write something' />
-                    <Divider />
-                    <Input isRequired={true} onChange={handleColourChange} value={colourValue} size={'lg'} placeholder='Choose a colour' />
-                    <Divider />
-                    <Input isRequired={true} onChange={handleFontColourChange} value={fontColourValue} size={'lg'} placeholder='Choose a font colour' />
-                    <Divider />
-                    <HexColorPicker color={colourValue} onChange={setColourValue} />
-                    <Divider />
-                    <HexColorPicker color={fontColourValue} onChange={setFontColourValue} />
+                    <Tabs isFitted variant='enclosed'>
+                        <TabList>
+                            <Tab>
+                               Normal Note
+                            </Tab>
+                            <Tab>
+                                Canvas Note
+                            </Tab>
+                        </TabList>
+                        <TabPanels>
+                            <TabPanel>
+                                <Input isRequired={true} onChange={handleContentChange} value={contentValue} size={'lg'} placeholder='Write something' />
+                                <Divider />
+                                <Input isRequired={true} onChange={handleColourChange} value={colourValue} size={'lg'} placeholder='Choose a colour' />
+                                <Divider />
+                                <Input isRequired={true} onChange={handleFontColourChange} value={fontColourValue} size={'lg'} placeholder='Choose a font colour' />
+                                <Divider />
+                                <HexColorPicker color={colourValue} onChange={setColourValue} />
+                                <Divider />
+                                <HexColorPicker color={fontColourValue} onChange={setFontColourValue} />
+                            </TabPanel>
+                            <TabPanel>
+                                <CanvasNote/>
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
+
                 </ModalBody>
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>
