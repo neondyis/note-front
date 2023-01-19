@@ -1,5 +1,5 @@
-import {Note} from "../model/Note";
 import {createSlice} from "@reduxjs/toolkit";
+import {NoteType} from "../pages/Home/model/NoteType";
 
 export const noteSlice = createSlice({
     name:'notes',
@@ -14,7 +14,7 @@ export const noteSlice = createSlice({
             }
         },
         EDIT_NOTE:(state, action) => {
-            const noteIndex:number = state.notes.findIndex((note:Note) => note.id === action.payload.id);
+            const noteIndex:number = state.notes.findIndex((note:NoteType) => note.id === action.payload.id);
             const editNotes:any = [...state.notes];
             editNotes[noteIndex] = action.payload;
 
@@ -32,7 +32,7 @@ export const noteSlice = createSlice({
             }
         },
         DELETE_NOTE: (state, action) => {
-            const deleteNotes:any =  state.notes.filter((note:Note) => note.id !== action.payload);
+            const deleteNotes:any =  state.notes.filter((note:NoteType) => note.id !== action.payload);
             return {
                 ...state,
                 notes: deleteNotes,

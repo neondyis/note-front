@@ -1,12 +1,12 @@
 import { Stage, Layer, Line } from 'react-konva';
-import React, {SetStateAction, useRef, useState} from "react";
+import React, {SetStateAction, useEffect, useRef, useState} from "react";
 import Konva from "konva";
 import {Button, Center} from "@chakra-ui/react";
 import {HexColorPicker} from "react-colorful";
 
 export const CanvasNote = ({onBackgroundChange,onStrokeChange,content,background}:CanvasNoteProps) => {
     const [tool, setTool] = useState('pen');
-    const [lines, setLines] = useState(content ? JSON.parse(content):[]);
+    const [lines, setLines] = useState([]);
     const stageRef = useRef(null);
 
     // TODO ADD UNDO AND REDO FUNCTIONALITY
@@ -15,6 +15,14 @@ export const CanvasNote = ({onBackgroundChange,onStrokeChange,content,background
     const [strokeValue, setStrokeValue] = useState("#df4b26");
     const [backgroundValue, setBackgroundValue] = useState(background ? background :"#ffffff");
     const isDrawing = useRef(false);
+
+    useEffect(() => {
+        try {
+            setLines(JSON.parse(content))
+        }catch (e){
+            console.log("Not valid JSON")
+        }
+    },[content])
 
     const handleMouseDown = (e:Konva.KonvaEventObject<MouseEvent>) => {
         isDrawing.current = true;
@@ -37,6 +45,7 @@ export const CanvasNote = ({onBackgroundChange,onStrokeChange,content,background
         lastLine.points = lastLine.points.concat([point.x, point.y]);
 
         // replace last
+        // @ts-ignore
         lines.splice(lines.length - 1, 1, lastLine);
         setLines(lines.concat());
     };

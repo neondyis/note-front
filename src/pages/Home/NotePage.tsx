@@ -9,8 +9,9 @@ import {useEffect} from "react";
 import {Note} from "./components/Note";
 import axios from "axios";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {UPDATE_NOTES} from "./redux/noteReducer";
+import {UPDATE_NOTES} from "../../redux/noteReducer";
 import {NoteModal} from "./components/NoteModal";
+import {NoteType} from "./model/NoteType"
 
 export const NotePage = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -51,7 +52,7 @@ export const NotePage = () => {
             <Center>
                 <VStack  divider={<StackDivider borderColor='gray.200' />}>
                     {notes.length > 0 ?
-                        notes?.map(({id,content,colour, fontColour,created,type}) => {
+                        notes?.map(({id,content,colour, fontColour,created,type}:NoteType) => {
                             return (
                                 <Box key={id}>
                                     <Spacer />

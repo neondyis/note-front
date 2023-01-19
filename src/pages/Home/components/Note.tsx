@@ -1,13 +1,10 @@
 import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import {
-    Button,
     Card,
     CardBody,
-    CardFooter, Divider,
+    CardFooter,
     Flex,
-    IconButton, Input,
-    Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
-    ModalOverlay,
+    IconButton,
     Spacer,
     Text,
     useDisclosure
@@ -15,7 +12,7 @@ import {
 import { DateTime } from "luxon";
 import axios from "axios";
 import {useAppDispatch} from "../../hooks";
-import {DELETE_NOTE, EDIT_NOTE} from "../redux/noteReducer";
+import {DELETE_NOTE, EDIT_NOTE} from "../../../redux/noteReducer";
 import {NoteModal} from "./NoteModal";
 import {Layer, Line, Stage} from "react-konva";
 import React, {useEffect, useState} from "react";

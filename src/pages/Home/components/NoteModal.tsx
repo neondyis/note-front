@@ -12,9 +12,10 @@ import {
 import {HexColorPicker} from "react-colorful";
 import {SetStateAction, useState} from "react";
 import {CanvasNote} from "./CanvasNote";
-import {ADD_NOTE} from "../redux/noteReducer";
+import {ADD_NOTE} from "../../../redux/noteReducer";
 import axios from "axios";
 import {useAppDispatch} from "../../hooks";
+
 
 export const NoteModal = ({isOpen,onClose,buttonText,buttonFunction,modalHeader,content,colour,fontColour}:NoteModalProps) => {
     const [contentValue, setContentValue] = useState(content ? content:"");
